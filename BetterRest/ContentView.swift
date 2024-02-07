@@ -25,37 +25,79 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            Form {
-                Section(header: Text("When do you want to wake up?").font(.headline)) {
-                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                        .labelsHidden()
-                }
-                
-                Section(header: Text("Desired amount of sleep").font(.headline)) {
-                    Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
-                }
-                
-                Section(header: Text("Daily coffee intake")) {
-                    Picker("Number of cups", selection: $coffeeAmount) {
-                        ForEach(0...20, id: \.self) { cups in
-                            Text("\(cups) cup").tag(cups)
+       
+            NavigationStack {
+                    
+                Form {
+                    
+                    Section(header: Text("When do you want to wake up?").font(.headline)) {
+                        HStack {
+                            Image(systemName: "bed.double")
+                            DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
                         }
                     }
+    
+                    Section(header: Text("Desired amount of sleep").font(.headline)) {
+                        HStack {
+                            Image(systemName: "clock")
+                            Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+                        }
+                    }
+                    
+                    
+                    Section(header: Text("Daily coffee intake")) {
+                        HStack {
+                            Image(systemName: "cup.and.saucer")
+                        Picker("Number of cups", selection: $coffeeAmount) {
+                            ForEach(0...20, id: \.self) { cups in
+                                Text("  \(cups) cup").tag(cups)
+                                }
+                            }
+                        }
+                    }
+                    
+                    Section(header: Text("Recommended bedtime")
+                        .font(.title2)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    ) {
+                        Text(calculateBedTime)
+                            .font(.system(size: 96, design: .monospaced)) // use a system font with a size of 36 and a rounded design
+                            .frame(maxWidth: .infinity, alignment: .center) // add this line
+                            .bold()
+                    }
+                    
+                    
                 }
+                .background(Circle()
+                    .fill(
+                        RadialGradient(
+                            gradient: Gradient(colors: [        Color(cgColor: CGColor(red: 0, green: 0.198, blue: 0.375, alpha: 1)),
+                                Color(cgColor: CGColor(red: 0.8, green: 0.6, blue: 0.55, alpha: 0.8)),
+                               
+                                Color(cgColor: CGColor(red: 0.05, green: 0.3, blue: 0.4, alpha: 0.1)),
+                                ]),
+                            center: .center,
+                            startRadius: 100,
+                            endRadius: 1200
+                        )
+                    )
+                    .frame(width: 3000, height: 3000)
+                    .position(CGPoint(x: -100, y: 750)))
                 
-                Section(header: Text("Recommended bedtime")
-                    .font(.title2)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                ) {
-                    Text(calculateBedTime)
-                        .font(.system(size: 96, design: .monospaced)) // use a system font with a size of 36 and a rounded design
-                        .frame(maxWidth: .infinity, alignment: .center) // add this line
-                }
+                .scrollContentBackground(.hidden)
+                .navigationTitle("BetterRest 😴 ")
+                
+                Image(systemName: "moon.stars")
+                    .font(.system(size: 130))
+                    .symbolEffect(.pulse.wholeSymbol)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.yellow, .white)
+                
+                    
+                    
             }
-            .navigationTitle("BetterRest")
-        }
     }
 
     var calculateBedTime: String {
